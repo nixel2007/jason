@@ -48,7 +48,7 @@ If you need to set up locally:
   - `opm install -l reflector` (installed automatically with annotations)
   - `opm install -l oneunit` -- for running tests, takes 30-60 seconds. NEVER CANCEL.
 - Libraries install to `oscript_modules/` directory locally
-- Verify installation: `opm list -l` should show annotations v1.3.1+, logos v1.7.1+, reflector v0.7.1+
+- Verify installation: `ls oscript_modules/` should show annotations, logos, reflector directories
 - OneUnit executable available at `oscript_modules/bin/oneunit` (no global installation needed)
 
 ### Build and Syntax Checking
@@ -123,7 +123,7 @@ After making changes to the library, validate by:
 ### Common Commands and Expected Times
 - `oscript --version` -- instant, shows "1Script Execution Engine. Version 2.0.0-rc.7"
 - `opm --version` -- instant, shows "1.5.1"
-- `opm list -l` -- 1 second, lists locally installed packages in oscript_modules/
+- `ls oscript_modules/` -- instant, lists locally installed packages in oscript_modules/
 - `opm install -l <package>` -- 10 seconds to 1 minute depending on dependencies. NEVER CANCEL.
 - `oscript -check <file.os>` -- 0.3 seconds per file
 - `oscript_modules/bin/oneunit execute` -- 5 seconds, runs all tests successfully
