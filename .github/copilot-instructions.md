@@ -42,12 +42,14 @@ If you need to set up locally:
 - This includes updated opm and resolves version compatibility issues
 
 #### Manual Installation (if needed)
-- Install core dependencies (required for library to work):
-  - `opm install annotations` -- takes 10-30 seconds. NEVER CANCEL.
-  - `opm install logos` -- takes 10-30 seconds. NEVER CANCEL. 
-  - `opm install reflector` (installed automatically with annotations)
-  - `opm install oneunit` -- for running tests, takes 30-60 seconds. NEVER CANCEL.
-- Verify installation: `opm list` should show annotations v1.3.1+, logos v1.7.1+, reflector v0.7.1+
+- Install core dependencies locally with `-l` flag (required for library to work):
+  - `opm install -l annotations` -- takes 10-30 seconds. NEVER CANCEL.
+  - `opm install -l logos` -- takes 10-30 seconds. NEVER CANCEL. 
+  - `opm install -l reflector` (installed automatically with annotations)
+  - `opm install -l oneunit` -- for running tests, takes 30-60 seconds. NEVER CANCEL.
+- Libraries install to `oscript_modules/` directory locally
+- Verify installation: `opm list -l` should show annotations v1.3.1+, logos v1.7.1+, reflector v0.7.1+
+- OneUnit executable available at `oscript_modules/bin/oneunit` (no global installation needed)
 
 ### Build and Syntax Checking
 - Check syntax of individual files: `oscript -check src/Классы/СериализаторJson.os` -- takes ~0.3 seconds
@@ -57,7 +59,8 @@ If you need to set up locally:
 ### Testing and Validation
 - **Tests work perfectly**: OneUnit 0.2.4 is fully functional
 - **JSON serialization works**: Library successfully serializes objects to JSON
-- Run tests: `oneunit execute` -- takes ~5 seconds, runs all tests in ./tests directory
+- Run tests: `oscript_modules/bin/oneunit execute` -- takes ~5 seconds, runs all tests in ./tests directory
+  - Alternative if path issues: `oscript oscript_modules/oneunit/src/cli/main.os execute`
 - Test output shows: "1 Тестов успешных" (1 successful test)
 - Individual test validation: Classes can be instantiated and serialized successfully
 
@@ -120,10 +123,10 @@ After making changes to the library, validate by:
 ### Common Commands and Expected Times
 - `oscript --version` -- instant, shows "1Script Execution Engine. Version 2.0.0-rc.7"
 - `opm --version` -- instant, shows "1.5.1"
-- `opm list` -- 1 second, lists installed packages
-- `opm install <package>` -- 10 seconds to 1 minute depending on dependencies. NEVER CANCEL.
+- `opm list -l` -- 1 second, lists locally installed packages in oscript_modules/
+- `opm install -l <package>` -- 10 seconds to 1 minute depending on dependencies. NEVER CANCEL.
 - `oscript -check <file.os>` -- 0.3 seconds per file
-- `oneunit execute` -- 5 seconds, runs all tests successfully
+- `oscript_modules/bin/oneunit execute` -- 5 seconds, runs all tests successfully
 
 ## Known Issues and Workarounds
 
@@ -135,7 +138,8 @@ These issues existed in older OneScript/OPM versions but are now resolved:
 
 ### Package Installation Notes
 - packagedef contains method "АдресРепозитория" which requires OPM 1.4.0+ (current 1.5.1 supports this)
-- All dependencies install cleanly with current OPM version
+- All dependencies install cleanly with current OPM version using `-l` flag for local installation
+- Libraries install to `oscript_modules/` directory, executables available in `oscript_modules/bin/`
 - No manual workarounds needed
 
 ## Development Guidelines
@@ -149,7 +153,7 @@ These issues existed in older OneScript/OPM versions but are now resolved:
 ### Making Changes
 1. Always run syntax check after modifying any .os file
 2. Verify that packagedef is still valid
-3. **Test functionality**: Run `oneunit execute` to ensure tests pass
+3. **Test functionality**: Run `oscript_modules/bin/oneunit execute` to ensure tests pass
 4. **Validate serialization**: Test JSON serialization with updated code
 5. Use .bsl-language-server.json for IDE support
 
@@ -166,8 +170,9 @@ oscript -check tests/Классы/ТестовыйКласс.os
 oscript -check src/Классы/АннотацияJsonСвойство.os
 oscript -check src/Классы/АннотацияСериализуемое.os
 
-# Run full test suite
-oneunit execute
+# Run full test suite using local oneunit
+oscript_modules/bin/oneunit execute
+# Alternative: oscript oscript_modules/oneunit/src/cli/main.os execute
 ```
 
 ## Important Notes
@@ -188,6 +193,6 @@ oneunit execute
 - logos v1.7.1+ (for logging)
 - reflector v0.7.1+ (for class introspection)
 - OneScript v2.0.0-rc.7 runtime
-- oneunit v0.2.4+ (for testing)
+- oneunit v0.2.4+ (for testing, available in oscript_modules/bin/oneunit)
 
 This library provides JSON serialization for OneScript custom classes using annotations to control the serialization process. All functionality is working correctly in the current environment.
