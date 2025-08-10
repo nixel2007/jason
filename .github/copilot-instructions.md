@@ -4,7 +4,20 @@ Jason is a OneScript library for convenient JSON serialization of custom script 
 
 **IMPORTANT: Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
+# Jason - OneScript JSON Serialization Library
+
+Jason is a OneScript library for convenient JSON serialization of custom script classes. The library is written in Russian and follows OneScript conventions.
+
+**IMPORTANT: Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
+
 ## Working Effectively
+
+### Current Environment (GitHub Actions)
+The repository runs in a GitHub Actions environment with OneScript installed via `oscript-library/ovm`:
+- **OneScript Version**: 2.0.0-rc.7 (matches packagedef requirement)
+- **OPM Version**: 1.5.1 (current and fully functional)
+- **OneUnit Version**: 0.2.4 (working test framework)
+- **Installation Method**: via `ovm` (OneScript Version Manager), no apt/sudo needed
 
 ### Using GitHub Actions (Recommended)
 - The repository includes `.github/workflows/copilot-setup-steps.yml` for automated setup
@@ -14,14 +27,14 @@ Jason is a OneScript library for convenient JSON serialization of custom script 
 - **ADVANTAGE**: Uses updated opm version that supports newer packages
 
 ### Manual Local Setup (Alternative)
-If you need to set up locally or the GitHub Actions approach fails:
+If you need to set up locally:
 
 #### Prerequisites and Setup
-- Install OneScript runtime:
-  - Download: `wget https://github.com/EvilBeaver/OneScript/releases/download/v1.9.3/onescript-engine_1.9.3_all.deb`
-  - Install dependencies: `sudo apt-get update && sudo apt --fix-broken install` -- takes 2-5 minutes. NEVER CANCEL.
-  - Install OneScript: `sudo dpkg -i onescript-engine_1.9.3_all.deb`
-  - Verify: `oscript --version` should show "1Script Execution Engine. Version 1.9.3.14"
+- Install OneScript runtime via `oscript-library/ovm`:
+  - Follow ovm installation instructions from oscript-library/ovm repository
+  - Install OneScript 2.0.0-rc.7: `ovm install 2.0.0-rc.7`
+  - Activate version: `ovm use 2.0.0-rc.7`
+  - Verify: `oscript --version` should show "1Script Execution Engine. Version 2.0.0-rc.7"
 
 ### Install Dependencies
 #### Via GitHub Actions (Recommended)
@@ -30,10 +43,11 @@ If you need to set up locally or the GitHub Actions approach fails:
 
 #### Manual Installation (if needed)
 - Install core dependencies (required for library to work):
-  - `sudo opm install annotations` -- takes 30-60 seconds. NEVER CANCEL.
-  - `sudo opm install logos` -- takes 10-30 seconds. NEVER CANCEL. 
-  - `sudo opm install reflector` (installed automatically with annotations)
-- Verify installation: `sudo opm list` should show annotations v1.3.1, logos v1.7.1, reflector v0.7.1
+  - `opm install annotations` -- takes 10-30 seconds. NEVER CANCEL.
+  - `opm install logos` -- takes 10-30 seconds. NEVER CANCEL. 
+  - `opm install reflector` (installed automatically with annotations)
+  - `opm install oneunit` -- for running tests, takes 30-60 seconds. NEVER CANCEL.
+- Verify installation: `opm list` should show annotations v1.3.1+, logos v1.7.1+, reflector v0.7.1+
 
 ### Build and Syntax Checking
 - Check syntax of individual files: `oscript -check src/Классы/СериализаторJson.os` -- takes ~0.3 seconds
@@ -41,17 +55,18 @@ If you need to set up locally or the GitHub Actions approach fails:
 - Build: No explicit build step required - OneScript is interpreted
 
 ### Testing and Validation
-- **KNOWN ISSUE**: JSON serialization fails with "System.TypeInitializationException: The type initializer for 'Newtonsoft.Json.JsonWriter' threw an exception"
-- **KNOWN ISSUE**: oneunit test runner requires opm v1.4.0+ (current is v1.0.7)
-- Object creation works: Classes can be instantiated successfully
-- Syntax validation works: `oscript -check tests/Сериализация.os` -- takes ~0.3 seconds
-- **WORKAROUND**: Tests cannot currently be executed due to runtime JSON library issues
+- **Tests work perfectly**: OneUnit 0.2.4 is fully functional
+- **JSON serialization works**: Library successfully serializes objects to JSON
+- Run tests: `oneunit execute` -- takes ~5 seconds, runs all tests in ./tests directory
+- Test output shows: "1 Тестов успешных" (1 successful test)
+- Individual test validation: Classes can be instantiated and serialized successfully
 
 ### Functional Testing Status
 - ✅ Class instantiation: `Новый СериализаторJson()` works
 - ✅ Method existence: Public methods are accessible  
-- ❌ JSON serialization: Fails at OneScript's native JSON writer level
-- ❌ Full test suite: Cannot run due to JSON and test runner issues
+- ✅ JSON serialization: `Сериализовать(Объект)` method works perfectly
+- ✅ Full test suite: OneUnit runs tests successfully
+- ✅ Annotations: `&Сериализуемое` and `&JsonСвойство` annotations work
 
 ### Manual Validation Scenarios
 After making changes to the library, validate by:
@@ -60,6 +75,7 @@ After making changes to the library, validate by:
 3. **Package definition check**: Verify that `packagedef` file is syntactically correct
 4. **Dependency verification**: Check dependencies are properly declared in packagedef
 5. **Code structure review**: Ensure annotations and class structure follow OneScript conventions
+6. **Test execution**: Run `oneunit execute` to ensure all tests pass
 
 **Sample validation script:**
 ```onescript
@@ -69,8 +85,12 @@ After making changes to the library, validate by:
     Попытка
         СериализаторJson = Новый СериализаторJson();
         Сообщить("✅ Сериализатор создан успешно");
+        
+        Объект = Новый Структура("Имя, Возраст", "Тест", 25);
+        Результат = СериализаторJson.Сериализовать(Объект);
+        Сообщить("✅ Сериализация: " + Результат);
     Исключение
-        Сообщить("❌ Ошибка создания: " + ОписаниеОшибки());
+        Сообщить("❌ Ошибка: " + ОписаниеОшибки());
     КонецПопытки;
 КонецПроцедуры
 
@@ -98,30 +118,25 @@ After making changes to the library, validate by:
 ```
 
 ### Common Commands and Expected Times
-- `oscript --version` -- instant, shows OneScript version
-- `opm --version` -- instant, shows "1.0.7"
-- `sudo opm list` -- 1 second, lists installed packages
-- `sudo opm install <package>` -- 10 seconds to 5 minutes depending on dependencies. NEVER CANCEL.
+- `oscript --version` -- instant, shows "1Script Execution Engine. Version 2.0.0-rc.7"
+- `opm --version` -- instant, shows "1.5.1"
+- `opm list` -- 1 second, lists installed packages
+- `opm install <package>` -- 10 seconds to 1 minute depending on dependencies. NEVER CANCEL.
 - `oscript -check <file.os>` -- 0.3 seconds per file
+- `oneunit execute` -- 5 seconds, runs all tests successfully
 
 ## Known Issues and Workarounds
 
-### Critical Runtime Issue
-- **Problem**: Library fails with "System.TypeInitializationException: The type initializer for 'Newtonsoft.Json.JsonWriter' threw an exception"
-- **Impact**: Cannot currently serialize objects to JSON
-- **Status**: Unresolved - may require OneScript/Mono version compatibility fixes
-- **Workaround**: Only syntax checking and code analysis possible at this time
+### Historical Issues (Resolved)
+These issues existed in older OneScript/OPM versions but are now resolved:
+- ~~JSON serialization TypeInitializationException~~ - **FIXED** in OneScript 2.0.0-rc.7
+- ~~OneUnit compatibility~~ - **FIXED** with OPM 1.5.1 and OneUnit 0.2.4
+- ~~OPM version incompatibility~~ - **FIXED** with current OPM 1.5.1
 
-### Test Runner Compatibility
-- **Problem**: oneunit test runner requires opm v1.4.0+, manual install gives v1.0.7
-- **Impact**: Cannot run automated tests with manual setup
-- **Solution**: Use GitHub Actions workflow which installs updated opm
-- **Workaround**: Use syntax checking only: `oscript -check tests/Сериализация.os`
-
-### Package Installation  
-- **Problem**: packagedef contains method "АдресРепозитория" not recognized by older opm versions
-- **Solution**: GitHub Actions workflow installs updated opm that recognizes this method
-- **Workaround**: Install dependencies manually: `sudo opm install annotations logos`
+### Package Installation Notes
+- packagedef contains method "АдресРепозитория" which requires OPM 1.4.0+ (current 1.5.1 supports this)
+- All dependencies install cleanly with current OPM version
+- No manual workarounds needed
 
 ## Development Guidelines
 
@@ -134,8 +149,8 @@ After making changes to the library, validate by:
 ### Making Changes
 1. Always run syntax check after modifying any .os file
 2. Verify that packagedef is still valid
-3. **Current limitation**: Cannot test functionality due to runtime issues
-4. Focus on syntax correctness and code structure
+3. **Test functionality**: Run `oneunit execute` to ensure tests pass
+4. **Validate serialization**: Test JSON serialization with updated code
 5. Use .bsl-language-server.json for IDE support
 
 ### Validation Commands to Run Before Committing
@@ -150,26 +165,29 @@ oscript -check tests/Классы/ТестовыйКласс.os
 # Verify annotations
 oscript -check src/Классы/АннотацияJsonСвойство.os
 oscript -check src/Классы/АннотацияСериализуемое.os
+
+# Run full test suite
+oneunit execute
 ```
 
 ## Important Notes
 
 ### Timeout Requirements
-- **NEVER CANCEL** apt operations during OneScript installation - can take 5+ minutes
-- **NEVER CANCEL** opm package installations - can take 1-5 minutes depending on dependencies
-- Set timeouts of 300+ seconds for package installation commands
+- **NEVER CANCEL** opm package installations - can take 1+ minutes depending on dependencies
+- Set timeouts of 60+ seconds for package installation commands
 - Syntax checking is fast (0.3s per file) and doesn't need special timeouts
+- Test execution is fast (5s) and doesn't need special timeouts
 
 ### Language and Encoding
 - All source code, comments, and variable names in Russian
 - Files use Cyrillic characters and must be UTF-8 with BOM
-- Package uses Russian method names in packagedef (known compatibility issue)
+- Package uses Russian method names in packagedef (supported by current OPM)
 
 ### Dependencies
 - annotations v1.3.1+ (for &JsonСвойство, &Сериализуемое annotations)
 - logos v1.7.1+ (for logging)
 - reflector v0.7.1+ (for class introspection)
-- OneScript v1.9.3+ runtime
-- Mono v6.8.0+ (installed with OneScript)
+- OneScript v2.0.0-rc.7 runtime
+- oneunit v0.2.4+ (for testing)
 
-This library provides JSON serialization for OneScript custom classes using annotations to control the serialization process. Currently experiencing runtime compatibility issues that prevent full functional testing.
+This library provides JSON serialization for OneScript custom classes using annotations to control the serialization process. All functionality is working correctly in the current environment.
