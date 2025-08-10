@@ -59,8 +59,7 @@ If you need to set up locally:
 ### Testing and Validation
 - **Tests work perfectly**: OneUnit 0.2.4 is fully functional
 - **JSON serialization works**: Library successfully serializes objects to JSON
-- Run tests: `oscript_modules/bin/oneunit execute` -- takes ~5 seconds, runs all tests in ./tests directory
-  - Alternative if path issues: `oscript oscript_modules/oneunit/src/cli/main.os execute`
+- Run tests: `oneunit execute` -- takes ~5 seconds, runs all tests in ./tests directory
 - Test output shows: "1 Тестов успешных" (1 successful test)
 - Individual test validation: Classes can be instantiated and serialized successfully
 
@@ -126,7 +125,7 @@ After making changes to the library, validate by:
 - `ls oscript_modules/` -- instant, lists locally installed packages in oscript_modules/
 - `opm install -l <package>` -- 10 seconds to 1 minute depending on dependencies. NEVER CANCEL.
 - `oscript -check <file.os>` -- 0.3 seconds per file
-- `oscript_modules/bin/oneunit execute` -- 5 seconds, runs all tests successfully
+- `oneunit execute` -- 5 seconds, runs all tests successfully
 
 ## Known Issues and Workarounds
 
@@ -165,8 +164,7 @@ oscript -check src/Классы/АннотацияJsonСвойство.os
 oscript -check src/Классы/АннотацияСериализуемое.os
 
 # Run full test suite using local oneunit
-oscript_modules/bin/oneunit execute
-# Alternative: oscript oscript_modules/oneunit/src/cli/main.os execute
+oneunit execute
 ```
 
 ## Important Notes
