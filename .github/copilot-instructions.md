@@ -14,9 +14,9 @@ Jason is a OneScript library for convenient JSON serialization of custom script 
 
 ### Current Environment (GitHub Actions)
 The repository runs in a GitHub Actions environment with OneScript installed via `oscript-library/ovm`:
-- **OneScript Version**: 2.0.0-rc.7 (matches packagedef requirement)
-- **OPM Version**: 1.5.1 (current and fully functional)
-- **OneUnit Version**: 0.2.4 (working test framework)
+- **OneScript Version**: >=2.0.0-rc.8 (matches packagedef requirement)
+- **OPM Version**: >=1.5.1 (current and fully functional)
+- **OneUnit Version**: >=0.2.4 (working test framework)
 - **Installation Method**: via `ovm` (OneScript Version Manager), no apt/sudo needed
 
 ### Using GitHub Actions (Recommended)
@@ -32,9 +32,9 @@ If you need to set up locally:
 #### Prerequisites and Setup
 - Install OneScript runtime via `oscript-library/ovm`:
   - Follow ovm installation instructions from oscript-library/ovm repository
-  - Install OneScript 2.0.0-rc.7: `ovm install 2.0.0-rc.7`
-  - Activate version: `ovm use 2.0.0-rc.7`
-  - Verify: `oscript --version` should show "1Script Execution Engine. Version 2.0.0-rc.7"
+  - Install OneScript 2.0.0-rc.8: `ovm install 2.0.0-rc.8`
+  - Activate version: `ovm use 2.0.0-rc.8`
+  - Verify: `oscript --version` should show "1Script Execution Engine. Version 2.0.0-rc.8"
 
 ### Install Dependencies
 #### Via GitHub Actions (Recommended)
@@ -129,12 +129,6 @@ After making changes to the library, validate by:
 - `oscript_modules/bin/oneunit execute` -- 5 seconds, runs all tests successfully
 
 ## Known Issues and Workarounds
-
-### Historical Issues (Resolved)
-These issues existed in older OneScript/OPM versions but are now resolved:
-- ~~JSON serialization TypeInitializationException~~ - **FIXED** in OneScript 2.0.0-rc.7
-- ~~OneUnit compatibility~~ - **FIXED** with OPM 1.5.1 and OneUnit 0.2.4
-- ~~OPM version incompatibility~~ - **FIXED** with current OPM 1.5.1
 
 ### Package Installation Notes
 - packagedef contains method "АдресРепозитория" which requires OPM 1.4.0+ (current 1.5.1 supports this)
