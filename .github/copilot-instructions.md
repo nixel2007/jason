@@ -1,12 +1,6 @@
 # Jason - OneScript JSON Serialization Library
 
-Jason is a OneScript library for convenient JSON serialization of custom script classes. The library is written in Russian and follows OneScript conventions.
-
-**IMPORTANT: Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
-
-# Jason - OneScript JSON Serialization Library
-
-Jason is a OneScript library for convenient JSON serialization of custom script classes. The library is written in Russian and follows OneScript conventions.
+Jason is a OneScript library for convenient JSON serialization and deserialization of custom script classes. The library is written in Russian and follows OneScript conventions.
 
 **IMPORTANT: Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
@@ -14,9 +8,9 @@ Jason is a OneScript library for convenient JSON serialization of custom script 
 
 ### Current Environment (GitHub Actions)
 The repository runs in a GitHub Actions environment with OneScript installed via `oscript-library/ovm`:
-- **OneScript Version**: >=2.0.0-rc.8 (matches packagedef requirement)
-- **OPM Version**: >=1.5.1 (current and fully functional)
-- **OneUnit Version**: >=0.2.4 (working test framework)
+- **OneScript Version**: 2.0.0-rc.8 (matches packagedef requirement)
+- **OPM Version**: 1.5.1 (current and fully functional)
+- **OneUnit Version**: 0.2.4 (working test framework)
 - **Installation Method**: via `ovm` (OneScript Version Manager), no apt/sudo needed
 
 ### Using GitHub Actions (Recommended)
@@ -39,6 +33,7 @@ If you need to set up locally:
 ### Install Dependencies
 #### Via GitHub Actions (Recommended)
 - The setup workflow automatically installs dependencies via `opm install -l --dev`
+- Additionally installs OneUnit globally with `opm install oneunit`
 - This includes updated opm and resolves version compatibility issues
 
 #### Manual Installation (if needed)
@@ -58,17 +53,18 @@ If you need to set up locally:
 
 ### Testing and Validation
 - **Tests work perfectly**: OneUnit 0.2.4 is fully functional
-- **JSON serialization works**: Library successfully serializes objects to JSON
+- **JSON serialization and deserialization works**: Library successfully serializes objects to JSON and deserializes them back
 - Run tests: `oneunit execute` -- takes ~5 seconds, runs all tests in ./tests directory
-- Test output shows: "1 Тестов успешных" (1 successful test)
-- Individual test validation: Classes can be instantiated and serialized successfully
+- Test output shows: "4 Тестов успешных" (4 successful tests) across 2 test suites
+- Individual test validation: Classes can be instantiated, serialized, and deserialized successfully
 
 ### Functional Testing Status
 - ✅ Class instantiation: `Новый СериализаторJson()` works
 - ✅ Method existence: Public methods are accessible  
 - ✅ JSON serialization: `Сериализовать(Объект)` method works perfectly
-- ✅ Full test suite: OneUnit runs tests successfully
-- ✅ Annotations: `&Сериализуемое` and `&JsonСвойство` annotations work
+- ✅ JSON deserialization: `ДесериализаторJson` class works for converting JSON back to objects
+- ✅ Full test suite: OneUnit runs tests successfully (4 tests across 2 suites)
+- ✅ Annotations: `&Сериализуемое` and `&Несериализуемое` annotations work
 
 ### Manual Validation Scenarios
 After making changes to the library, validate by:
@@ -91,6 +87,10 @@ After making changes to the library, validate by:
         Объект = Новый Структура("Имя, Возраст", "Тест", 25);
         Результат = СериализаторJson.Сериализовать(Объект);
         Сообщить("✅ Сериализация: " + Результат);
+        
+        // Десериализация работает с соответствующими типами
+        // Подробности использования см. в tests/Десериализация.os
+        Сообщить("✅ Библиотека функционирует корректно");
     Исключение
         Сообщить("❌ Ошибка: " + ОписаниеОшибки());
     КонецПопытки;
@@ -105,27 +105,34 @@ After making changes to the library, validate by:
 ```
 /home/runner/work/jason/jason/
 ├── .github/
-│   ├── workflows/copilot-setup-steps.yml  # GitHub Actions setup workflow
-│   └── copilot-instructions.md            # This file
+│   ├── workflows/
+│   │   ├── copilot-setup-steps.yml  # GitHub Actions setup workflow
+│   │   ├── rebase.yml               # Rebase workflow
+│   │   └── test.yml                 # Test workflow (uses autumn-library/workflows)
+│   └── copilot-instructions.md      # This file
+├── .vscode/                         # VS Code configuration
 ├── src/Классы/
 │   ├── СериализаторJson.os          # Main JSON serializer class
-│   ├── АннотацияJsonСвойство.os     # JsonProperty annotation
-│   └── АннотацияСериализуемое.os    # Serializable annotation
+│   ├── ДесериализаторJson.os        # JSON deserializer class
+│   ├── АннотацияСериализуемое.os    # Serializable annotation
+│   └── АннотацияНесериализуемое.os  # Non-serializable annotation
 ├── tests/
-│   ├── Сериализация.os              # Main test file
+│   ├── Сериализация.os              # Serialization tests
+│   ├── Десериализация.os            # Deserialization tests
 │   └── Классы/ТестовыйКласс.os      # Test class with annotations
 ├── packagedef                        # OneScript package definition
 ├── .bsl-language-server.json        # BSL language server config
+├── opm.ospx                         # OPM package file
 └── README.md                        # Brief library description (Russian)
 ```
 
 ### Common Commands and Expected Times
-- `oscript --version` -- instant, shows "1Script Execution Engine. Version 2.0.0-rc.7"
+- `oscript --version` -- instant, shows "1Script Execution Engine. Version 2.0.0-rc.8"
 - `opm --version` -- instant, shows "1.5.1"
 - `ls oscript_modules/` -- instant, lists locally installed packages in oscript_modules/
 - `opm install -l <package>` -- 10 seconds to 1 minute depending on dependencies. NEVER CANCEL.
 - `oscript -check <file.os>` -- 0.3 seconds per file
-- `oneunit execute` -- 5 seconds, runs all tests successfully
+- `oneunit execute` -- 5 seconds, runs all tests successfully (4 tests, 2 suites)
 
 ## Known Issues and Workarounds
 
@@ -139,7 +146,7 @@ After making changes to the library, validate by:
 
 ### Code Standards
 - All source code in Russian language
-- Use OneScript annotations: `&JsonСвойство`, `&Сериализуемое`
+- Use OneScript annotations: `&Сериализуемое`, `&Несериализуемое`
 - Follow OneScript naming conventions (CamelCase with Russian characters)
 - Files must be UTF-8 encoded with BOM (﻿)
 
@@ -152,18 +159,20 @@ After making changes to the library, validate by:
 
 ### Validation Commands to Run Before Committing
 ```bash
-# Check syntax of main serializer
+# Check syntax of main serializer and deserializer
 oscript -check src/Классы/СериализаторJson.os
+oscript -check src/Классы/ДесериализаторJson.os
 
 # Check syntax of test files  
 oscript -check tests/Сериализация.os
+oscript -check tests/Десериализация.os
 oscript -check tests/Классы/ТестовыйКласс.os
 
 # Verify annotations
-oscript -check src/Классы/АннотацияJsonСвойство.os
 oscript -check src/Классы/АннотацияСериализуемое.os
+oscript -check src/Классы/АннотацияНесериализуемое.os
 
-# Run full test suite using local oneunit
+# Run full test suite using oneunit
 oneunit execute
 ```
 
@@ -181,10 +190,12 @@ oneunit execute
 - Package uses Russian method names in packagedef (supported by current OPM)
 
 ### Dependencies
-- annotations v1.3.1+ (for &JsonСвойство, &Сериализуемое annotations)
+- annotations v1.2.0+ (for &Сериализуемое, &Несериализуемое annotations)
 - logos v1.7.1+ (for logging)
-- reflector v0.7.1+ (for class introspection)
-- OneScript v2.0.0-rc.7 runtime
-- oneunit v0.2.4+ (for testing, available in oscript_modules/bin/oneunit)
+- collectionos v0.8.2+ (for collection operations)
+- reflector v0.7.1+ (for class introspection, installed automatically with annotations)
+- OneScript v2.0.0-rc.8 runtime
+- oneunit v0.2.4+ (for testing, available in oscript_modules/bin/oneunit or globally)
+- asserts v1.5.0+ (for testing assertions, development dependency)
 
-This library provides JSON serialization for OneScript custom classes using annotations to control the serialization process. All functionality is working correctly in the current environment.
+This library provides JSON serialization and deserialization for OneScript custom classes using annotations to control the serialization process. All functionality is working correctly in the current environment.
