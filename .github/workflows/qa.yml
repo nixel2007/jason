@@ -9,6 +9,7 @@ jobs:
   sonar:
     uses: autumn-library/workflows/.github/workflows/sonar.yml@oneunit
     with:
+      oscript_version: 2.0.0-rc.8
       github_repository: nixel2007/jason
       coveralls: true
     secrets:
