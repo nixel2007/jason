@@ -7,10 +7,11 @@ on:
 
 jobs:
   sonar:
-    uses: autumn-library/workflows/.github/workflows/sonar.yml@oneunit
+    uses: autumn-library/workflows/.github/workflows/sonar.yml@main
     with:
       oscript_version: 2.0.0-rc.8
       github_repository: nixel2007/jason
       coveralls: true
+      test_engine: oneunit
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
