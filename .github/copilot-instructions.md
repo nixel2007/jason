@@ -48,7 +48,7 @@ If you need to set up locally:
 
 ### Build and Syntax Checking
 - Check syntax of individual files: `oscript -check src/Классы/СериализаторJson.os` -- takes ~0.3 seconds
-- Check all source files: `find src -name "*.os" -exec oscript -check {} \;` -- takes 1-2 seconds total
+- Check all source files: `find src -name "*.os" -exec oscript -check {} -env=src/fake-entrypoint.os \;` -- takes 1-2 seconds total
 - Build: No explicit build step required - OneScript is interpreted
 
 ### Testing and Validation
